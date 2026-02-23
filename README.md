@@ -11,7 +11,7 @@ Not a full output browser — just the last N images and videos, always visible 
 <!-- ![Gallery grid view](screenshots/02_grid.png) -->
 <!-- ![Compare mode](screenshots/03_compare.png) -->
 <!-- ![Info modal](screenshots/04_info.png) -->
-
+![gallery](https://github.com/user-attachments/assets/ef02d9d5-8ad0-4df2-ad1b-cb1d639d4ecb)
 ---
 
 ## What it does
@@ -26,7 +26,6 @@ Not a full output browser — just the last N images and videos, always visible 
 - **Keyboard scroll** when the node is selected (← →)
 - Layout and size preferences **saved with the workflow**
 - **Configurable count** — show last 5 to 50 outputs
-![gallery](https://github.com/user-attachments/assets/ef02d9d5-8ad0-4df2-ad1b-cb1d639d4ecb)
 
 ## Installation
 
