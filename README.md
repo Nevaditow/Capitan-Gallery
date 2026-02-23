@@ -2,8 +2,7 @@
 
 A gallery node for ComfyUI focused on one thing: **quickly reviewing your latest generated outputs and comparing them against the original input**.
 
-Not a full output browser — just the last N images and videos, always visible while you work.
-
+Displays images and looping videos.
 ---
 
 <!-- Add your screenshots here -->
