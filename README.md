@@ -1,70 +1,60 @@
 # 🖼️ ComfyUI Capitan Gallery
 
-Horizontal thumbnail gallery node for ComfyUI with lightbox viewer and hold-to-compare
+A gallery node for ComfyUI focused on one thing: **quickly reviewing your latest generated outputs and comparing them against the original input**.
 
-![ComfyUI Capitan Gallery](https://img.shields.io/badge/ComfyUI-Custom%20Node-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
+Not a full output browser — just the last N images and videos, always visible while you work.
 
 ---
 
-## Features
+<!-- Add your screenshots here -->
+<!-- ![Gallery horizontal view](screenshots/01_horizontal.png) -->
+<!-- ![Gallery grid view](screenshots/02_grid.png) -->
+<!-- ![Compare mode](screenshots/03_compare.png) -->
+<!-- ![Info modal](screenshots/04_info.png) -->
 
-- **Horizontal thumbnail strip** embedded directly in the canvas — no need to open side panels
-- **Auto-refreshes** after each generation
-- **Click any thumbnail** to open a fullscreen lightbox viewer
-- **Arrow navigation** (← →) between images in the lightbox, also supports keyboard arrows
-- **Hold ⇄ to compare** — hold the compare button on any image thumbnail or in the lightbox to instantly see your original input image for before/after comparison
-- **Video support** — MP4, WebM and GIF thumbnails play inline with autoplay
+---
+
+## What it does
+
+- Shows the **most recent outputs** from your `output/` folder, including subfolders.
+- **Hold-to-compare** any image against the input used to generate it — each thumbnail remembers its own source image, not just the current one
+- Three **layout modes**: horizontal strip, vertical list, grid
+- Four **thumbnail sizes** cycling with one button
+- **Lightbox** with scroll-to-zoom, arrow key navigation, and the same compare feature
+- **Metadata panel** for images and videos — reads seed, steps, CFG, sampler, LoRAs and models directly from the file. Works with standard workflows, subgraphs, translation nodes and VHS-encoded MP4s
+- Generation **time** shown per image
+- **Keyboard scroll** when the node is selected (← →)
+- Layout and size preferences **saved with the workflow**
 - **Configurable count** — show last 5 to 50 outputs
-
----
 
 ## Installation
 
-### Via ComfyUI Manager (recommended)
-Search for `Capitan-Gallery` in the Manager and install.
+**Via ComfyUI Manager** *(once listed)*  
+Search for `Capitan-Gallery` and install.
 
-### Manual
+**Manual**
 ```bash
 cd ComfyUI/custom_nodes
-git clone https://github.com/Nevaditow/capitan-gallery
+git clone https://github.com/Nevaditow/Capitan-Gallery
 ```
 Restart ComfyUI.
 
----
-
 ## Usage
 
-1. Add the node: **Add Node → Capitan/Utils → 🖼️ Capitan Gallery**
-2. Connect any output from your workflow to the **`trigger`** input so the gallery refreshes after each generation
-3. *(Optional)* Connect an `IMAGE` to **`input_image`** to enable the hold-to-compare feature
-4. Adjust **`count`** to control how many recent outputs are shown (default: 15)
+Add the **🖼️ Capitan Gallery** node to any workflow. No connections required.
 
-### Example workflow connection
-```
-[Save Image / Video Combine] → output → trigger → [Capitan Gallery]
-[Load Image]                 → IMAGE  → input_image → [Capitan Gallery]
-```
+| Input | Description |
+|-------|-------------|
+| `input_image` | Optional. Connect a `LoadImage` output to enable the compare feature |
+| `count` | How many recent files to show (default 15) |
 
----
+The node picks up everything in `output/` automatically — images and videos, any subfolder.
 
-## Node Inputs
+## Notes
 
-| Input | Type | Required | Description |
-|---|---|---|---|
-| `trigger` | `*` | Yes | Connect to any node output to trigger auto-refresh |
-| `input_image` | `IMAGE` | No | Original input image for hold-to-compare |
-| `count` | `INT` | No | Number of recent outputs to show (5–50, default 15) |
-
----
-
-## Compatibility
-
-- ComfyUI (any recent version)
-- Windows / Linux / macOS
-- Supports: `.png` `.jpg` `.jpeg` `.webp` `.mp4` `.webm` `.gif`
-
----
+- Compare memory is session-only and resets on restart
+- Metadata works best with `SaveImage` nodes (PNG) and VHS `VideoCombine` with `save_metadata` enabled
+- This node shows your recent work, not your entire output history
 
 ## License
 
