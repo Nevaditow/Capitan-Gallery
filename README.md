@@ -1,4 +1,4 @@
-# 🖼️ ComfyUI Capitan Gallery
+# 🖼️ Capitan Gallery
 
 A gallery node for ComfyUI focused on one thing: **quickly reviewing your latest generated outputs and comparing them against the original input**.
 
@@ -26,6 +26,7 @@ Not a full output browser — just the last N images and videos, always visible 
 - **Keyboard scroll** when the node is selected (← →)
 - Layout and size preferences **saved with the workflow**
 - **Configurable count** — show last 5 to 50 outputs
+![gallery](https://github.com/user-attachments/assets/ef02d9d5-8ad0-4df2-ad1b-cb1d639d4ecb)
 
 ## Installation
 
