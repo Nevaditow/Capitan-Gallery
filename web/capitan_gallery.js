@@ -107,41 +107,47 @@ const _widgets = new Set();
 function refreshAll() { _widgets.forEach(w => w._fetchInput().then(() => w.refresh())); }
 
 function setupListeners() {
-  app.api.addEventListener("execution_start", () => { _execStart = performance.now(); });
+  app.api.addEventListener("execution_start", () => {
+    _execStart = performance.now();
+  });
+
+  // "executing" fires before each node — keep a rolling snapshot of inputUrl
+  // The key insight: when "executed" fires with image outputs, the LAST snapshot
+  // before that is the correct source image for this batch iteration
+  let _lastInputSnap = null;
+  app.api.addEventListener("executing", (e) => {
+    // Snap the current inputUrl — this runs right before a node executes
+    // If input_image is connected to a batch, it reflects the current batch frame
+    _widgets.forEach(w => {
+      if (w.inputUrl) _lastInputSnap = w.inputUrl;
+    });
+  });
 
   app.api.addEventListener("execution_success", () => {
     if (_execStart !== null) {
       _pending = { t: ((performance.now() - _execStart) / 1000).toFixed(1), ts: Date.now() };
       _execStart = null;
     }
-    // Capturar el inputUrl actual ANTES del refresh (todavía refleja la imagen usada)
-    const snapUrl = _widgets.size ? [..._widgets][0].inputUrl : null;
-    refreshAll().then?.(() => {});
-    // Asignar al archivo más nuevo después de un tick
-    setTimeout(() => {
-      _widgets.forEach(w => {
-        if (w.files.length) {
-          const fname = w.files[0].name;
-          if (snapUrl && !_compareMap[fname]) _compareMap[fname] = snapUrl;
-        }
-      });
-    }, 500);
+    _lastInputSnap = null;
+    refreshAll();
   });
 
   app.api.addEventListener("executed", (e) => {
     const out = e?.detail?.output;
     if (!out) return;
     const elapsed = _execStart !== null ? ((performance.now() - _execStart) / 1000).toFixed(1) : null;
-    if (elapsed) {
-      const fname = out?.images?.[0]?.filename || out?.gifs?.[0]?.filename;
-      if (fname) {
-        _times[fname] = elapsed;
-        // Guardar inputUrl vigente para este output
-        _widgets.forEach(w => { if (w.inputUrl && !_compareMap[fname]) _compareMap[fname] = w.inputUrl; });
+    const fname = out?.images?.[0]?.filename || out?.gifs?.[0]?.filename;
+    if (fname) {
+      if (elapsed) _times[fname] = elapsed;
+      // _lastInputSnap was captured just before THIS node ran —
+      // correctly paired to the batch frame that produced this output
+      if (_lastInputSnap && !_compareMap[fname]) {
+        _compareMap[fname] = _lastInputSnap;
       }
-      if (!_pending) _pending = { t: elapsed, ts: Date.now() };
+      if (!_pending && elapsed) _pending = { t: elapsed, ts: Date.now() };
+      // Refresh immediately so gallery updates per-image, not only at end
+      setTimeout(() => refreshAll(), 300);
     }
-    refreshAll();
   });
 }
 
